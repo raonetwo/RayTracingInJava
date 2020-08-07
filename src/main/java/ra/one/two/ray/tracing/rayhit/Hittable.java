@@ -11,7 +11,9 @@ public interface Hittable {
      * @param ray ray that we check for hits.
      * @param tMin minimum scale by which the ray must extend before we start checking for collisions.
      * @param tMax maximum scale by which the ray can be extended
-     * @return HitRecord of hit if possible null otherwise
+     * @param hitRecord object to record a ray hit, stores information about a hit
+     *                  like the material of object hit, the normal at hit location, the ray position from origin where it hit the object
+     * @return boolean that indicates whether something was hit by the given ray
      */
-    public HitRecord hit(final Ray ray, final double tMin, final double tMax);
+    public boolean hit(final Ray ray, final double tMin, final double tMax, final HitRecord hitRecord);
 }

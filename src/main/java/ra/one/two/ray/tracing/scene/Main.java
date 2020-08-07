@@ -107,9 +107,10 @@ public class Main {
         }
 
         // Check if our input ray hits something in the world
-        final HitRecord hitRecord = world.hit(ray, 0.001, Double.POSITIVE_INFINITY);
+        final HitRecord hitRecord = new HitRecord();
+        final boolean hit = world.hit(ray, 0.001, Double.POSITIVE_INFINITY, hitRecord);
         // If we find that it did indeed hit some objects in the world
-        if (hitRecord != null) {
+        if (hit) {
             // scatter the ray from the objects it hit based on their material types.
             final ScatterResult scatterResult = hitRecord.getMaterialOfObjectHit().scatter(ray, hitRecord);
             // If the ray gets scattered and absorbed.

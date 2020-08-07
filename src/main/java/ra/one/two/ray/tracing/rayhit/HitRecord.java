@@ -8,9 +8,9 @@ public class HitRecord {
 
     // We may have chosen to just save ray instead and get this location using ray.at(rayExtensionScale), its simpler to keep this as this is required by materials.
     // We could also have chose to save the hit object in this record and use that for normal calculation, but we are going by the book and again its simpler to keep just the normal at the hit location here.
-    private final Vec3 rayHitLocationOnHittableObject;
-    private final Material materialOfObjectHit;
-    private final double rayExtensionScale;
+    private Vec3 rayHitLocationOnHittableObject;
+    private Material materialOfObjectHit;
+    private double rayExtensionScale;
 
     // We could have omitted frontFace and setFaceNormal and directly could have set normal as part of the constructor
     // if we chose to have all our normals outer only.
@@ -29,12 +29,26 @@ public class HitRecord {
         this.materialOfObjectHit = materialOfObjectHit;
     }
 
+    public HitRecord() { }
+
     public boolean isFrontFace() {
         return frontFace;
     }
 
     public Material getMaterialOfObjectHit() {
         return materialOfObjectHit;
+    }
+
+    public void setRayHitLocationOnHittableObject(Vec3 rayHitLocationOnHittableObject) {
+        this.rayHitLocationOnHittableObject = rayHitLocationOnHittableObject;
+    }
+
+    public void setMaterialOfObjectHit(Material materialOfObjectHit) {
+        this.materialOfObjectHit = materialOfObjectHit;
+    }
+
+    public void setRayExtensionScale(double rayExtensionScale) {
+        this.rayExtensionScale = rayExtensionScale;
     }
 
     /**

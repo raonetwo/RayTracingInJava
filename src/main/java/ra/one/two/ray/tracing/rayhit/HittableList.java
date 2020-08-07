@@ -26,19 +26,17 @@ public class HittableList implements Hittable {
      * Our ray on extension by t may hit any number of objects but we only care about the closest object
      * as upon interacting with the closest object it either gets reflected, refracted or scattered. (diffraction out of scope)
      */
-    public HitRecord hit(Ray ray, double tMin, double tMax) {
+    public boolean hit(final Ray ray, final double tMin, final double tMax, final HitRecord hitRecord) {
         double closest_so_far = tMax;
-
-        HitRecord hitRecord = null;
-
+        boolean hasRayHitSomething = false;
         for (final Hittable object : hittableList) {
-            final HitRecord hitRecordObject = object.hit(ray, tMin, closest_so_far);
-            if (hitRecordObject != null) {
-                hitRecord = hitRecordObject;
-                closest_so_far = hitRecordObject.getRayExtensionScale();
+            boolean hit = object.hit(ray, tMin, closest_so_far, hitRecord);
+            if (hit) {
+                hasRayHitSomething = true;
+                closest_so_far = hitRecord.getRayExtensionScale();
             }
         }
 
-        return hitRecord;
+        return hasRayHitSomething;
     }
 }

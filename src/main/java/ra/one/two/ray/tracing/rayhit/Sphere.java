@@ -16,7 +16,7 @@ public class Sphere implements Hittable {
     }
 
     @Override
-    public HitRecord hit(final Ray ray, final double tMin, final double tMax) {
+    public boolean hit(final Ray ray, final double tMin, final double tMax, HitRecord hitRecord) {
         // Points that lie on sphere are the points P that satisfy (P - C).(P - C) = r^2 where C is the center of the sphere
         // (x - Cx)^2 + (y - Cy)^2 + (z - Cz)^2 = r^2 now a point can be represented as a ray from origin as origin + t * unit_vector_direction
         // in other words origin + t * direction which we had earlier defined in a ray. So a point P(t) can lie on sphere if (P(t)−C)⋅(P(t)−C)=r2
@@ -44,26 +44,30 @@ public class Sphere implements Hittable {
             final double root = Math.sqrt(quarterDiscriminant);
 
             // Get the closest intersection point.
-            double firstRoot = (-halfB - root) / a;
+            final double firstRoot = (-halfB - root) / a;
             if (firstRoot < tMax && firstRoot > tMin) {
                 // Save the details in the hit record
-                final HitRecord rec = new HitRecord(ray.at(firstRoot),firstRoot,material);
-                final Vec3 outward_normal = Vec3.subtract(rec.getRayHitLocationOnHittableObject(), center).scaleDown(radius);
-                rec.setFaceNormal(ray, outward_normal);
-                return rec;
+                hitRecord.setRayHitLocationOnHittableObject(ray.at(firstRoot));
+                hitRecord.setRayExtensionScale(firstRoot);
+                hitRecord.setMaterialOfObjectHit(material);
+                final Vec3 outward_normal = Vec3.subtract(hitRecord.getRayHitLocationOnHittableObject(), center).scaleDown(radius);
+                hitRecord.setFaceNormal(ray, outward_normal);
+                return true;
             }
 
             // Get the second intersection point
-            double secondRoot = (-halfB + root) / a;
+            final double secondRoot = (-halfB + root) / a;
             if (secondRoot < tMax && secondRoot > tMin) {
                 // Save the details in the hit record
-                final HitRecord rec = new HitRecord(ray.at(secondRoot), secondRoot, material);
-                final Vec3 outward_normal = Vec3.subtract(rec.getRayHitLocationOnHittableObject(), center).scaleDown(radius);
-                rec.setFaceNormal(ray, outward_normal);
-                return rec;
+                hitRecord.setRayHitLocationOnHittableObject(ray.at(secondRoot));
+                hitRecord.setRayExtensionScale(secondRoot);
+                hitRecord.setMaterialOfObjectHit(material);
+                final Vec3 outward_normal = Vec3.subtract(hitRecord.getRayHitLocationOnHittableObject(), center).scaleDown(radius);
+                hitRecord.setFaceNormal(ray, outward_normal);
+                return true;
             }
         }
 
-        return null;
+        return false;
     }
 }
