@@ -44,8 +44,8 @@ public class Dielectric implements Material {
     }
 
     // Read https://en.wikipedia.org/wiki/Schlick%27s_approximation
-    private double schlick(double cosTheta, double refractiveIndex) {
-        double r0 = Math.pow((1 - refractiveIndex) / (1 + refractiveIndex), 2);
+    private double schlick(final double cosTheta, final double refractiveIndex) {
+        final double r0 = Math.pow((1 - refractiveIndex) / (1 + refractiveIndex), 2);
         return r0 + (1-r0)*Math.pow((1 - cosTheta),5);
     }
 }

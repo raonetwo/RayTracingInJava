@@ -25,7 +25,7 @@ public class Sphere implements Hittable {
         // If such t exists then this means the ray we got as input will be able to intersect the sphere. We will solve for t using the quadratic formula
         // More importantly we want to solve for positive t (or t greater than t_min) as we want the intersection to be in front of the ray.
         // Get a vector from center to origin (O-C)
-        final Vec3 originToCenter = Vec3.add(ray.getOrigin(), center.negative());
+        final Vec3 originToCenter = Vec3.subtract(ray.getOrigin(), center);
         // dot product of direction of ray if a ray is O + tB we want B.B
         // a x^2 + b x + c = 0 we now have a
         final double a = ray.getDirection().length_squared();

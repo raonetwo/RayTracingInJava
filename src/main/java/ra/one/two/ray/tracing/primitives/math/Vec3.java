@@ -148,14 +148,26 @@ public class Vec3 {
     }
 
     /**
-     * Add the provided vector to itself
-     * @param other vector to add to itself
-     * @return itself after the input vector is added to it.
+     * Add the provided vector to this
+     * @param other vector to add to this
+     * @return this after the input vector is added to it.
      */
     public Vec3 add(final Vec3 other) {
         this.xComponent = this.xComponent + other.xComponent;
         this.yComponent = this.yComponent + other.yComponent;
         this.zComponent = this.zComponent + other.zComponent;
+        return this;
+    }
+    
+    /**
+     * Subtract the provided vector from this
+     * @param other vector to subtract from this
+     * @return this after the input vector is added to it.
+     */
+    public Vec3 subtract(final Vec3 other) {
+        this.xComponent = this.xComponent - other.xComponent;
+        this.yComponent = this.yComponent - other.yComponent;
+        this.zComponent = this.zComponent - other.zComponent;
         return this;
     }
 
@@ -301,7 +313,7 @@ public class Vec3 {
      * @param refrectiveIndexIncidenceOverRefrectiveIndexTransmission relative refractive index of the new medium
      * @return refracted vector
      */
-    public static Vec3 refract(final Vec3 incident, final Vec3 normal, double refrectiveIndexIncidenceOverRefrectiveIndexTransmission) {
+    public static Vec3 refract(final Vec3 incident, final Vec3 normal, final double refrectiveIndexIncidenceOverRefrectiveIndexTransmission) {
         // Get incidence angle
         double cosTheta = dot(incident.negative(), normal);
         // Get component perpendicular to normal for the refracted ray
@@ -323,7 +335,7 @@ public class Vec3 {
      *                          and we want to bring back to within acceptable range by taking an average of all the samples
      *                          that contributed to the pixelColor vector.
      */
-    public static void writeColor(PrintStream out, Vec3 pixelColor, int samples_per_pixel) {
+    public static void writeColor(final PrintStream out, final Vec3 pixelColor, final int samples_per_pixel) {
         double red = pixelColor.getxComponent();
         double green = pixelColor.getyComponent();
         double blue = pixelColor.getzComponent();
@@ -350,7 +362,7 @@ public class Vec3 {
      * @param max maximum value allowed
      * @return returns either the input value if it lies b/w min and max, if its lower then min then returns min, max if its higher then max.
      */
-    private static double clamp(double value, double min, double max) {
+    private static double clamp(final double value, final double min, final double max) {
         return Math.min(max, Math.max(min, value));
     }
 }
