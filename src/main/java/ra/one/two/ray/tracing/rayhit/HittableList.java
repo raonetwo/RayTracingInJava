@@ -10,9 +10,9 @@ import java.util.List;
  */
 public class HittableList implements Hittable {
 
-    List<Hittable> hittableList;
+    private ArrayList<Hittable> hittableList;
 
-    public List<Hittable> getHittableList() {
+    public ArrayList<Hittable> getHittableList() {
         return hittableList;
     }
 

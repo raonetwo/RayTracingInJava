@@ -26,7 +26,7 @@
                     <archive>
                         <manifest>
                             <!-- Jar file entry point -->
-                            <mainClass>ra.one.two.ray.tracing.scene.Main</mainClass>
+                            <mainClass>ra.one.two.ray.tracing.scene.RenderDriver</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

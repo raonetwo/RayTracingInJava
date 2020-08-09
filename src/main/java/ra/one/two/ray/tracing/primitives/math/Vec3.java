@@ -204,6 +204,31 @@ public class Vec3 {
     }
 
     /**
+     * Raise each component of vector by power
+     * @param power power by which each component has to be raised
+     * @return this after the power operation has been applied to all components.
+     */
+    public Vec3 pow(final double power) {
+        this.xComponent = Math.pow(this.xComponent, power);
+        this.yComponent = Math.pow(this.yComponent, power);
+        this.zComponent = Math.pow(this.zComponent, power);
+        return this;
+    }
+
+    /**
+     * Clamp the value of the vector components b/w min and max. This restricts the value b/w min and max.
+     * @param min minimum value allowed
+     * @param max maximum value allowed
+     * @return returns either the input value if it lies b/w min and max, if its lower then min then returns min, max if its higher then max.
+     */
+    public Vec3 clamp(final double min, final double max) {
+        this.xComponent = Math.min(max, Math.max(min, this.xComponent));
+        this.yComponent = Math.min(max, Math.max(min, this.yComponent));
+        this.zComponent = Math.min(max, Math.max(min, this.zComponent));
+        return this;
+    }
+
+    /**
      * Length of a vector squared aka dot product with self
      * @return lenth of the vector squared.
      */
@@ -326,43 +351,8 @@ public class Vec3 {
         return rOutPerp.add(rOutParallel);
     }
 
-    /**
-     * Utility function to treat the vector as color and write it to the provided output stream, where x y z represent red green and blue values.
-     * @param out output stream to write the color two
-     * @param pixelColor vector to be treated as a pixel with color values.
-     * @param samples_per_pixel this determines the contribution to the pixel color by each sample,
-     *                          the pixelColor vector may contain the sum of values of multiple samples for the same pixel
-     *                          and we want to bring back to within acceptable range by taking an average of all the samples
-     *                          that contributed to the pixelColor vector.
-     */
-    public static void writeColor(final PrintStream out, final Vec3 pixelColor, final int samples_per_pixel) {
-        double red = pixelColor.getxComponent();
-        double green = pixelColor.getyComponent();
-        double blue = pixelColor.getzComponent();
-
-        // Divide the color by the number of samples and gamma-correct for gamma=2.0 which is 1/gamma root which is sqrt.
-        double scale = 1.0 / samples_per_pixel;
-        red = Math.sqrt(scale * red);
-        green = Math.sqrt(scale * green);
-        blue = Math.sqrt(scale * blue);
-        // Write the translated [0,255] value of each color component.
-        out.println("" + (int)(255.999 * clamp(red, 0, 0.999)) + " "
-                + (int)(255.999 * clamp(green, 0, 0.999)) + " "
-                + (int)(255.999 * clamp(blue, 0, 0.999)));
-    }
-
     public String toString() {
-        return "" + this.xComponent + " " + this.yComponent + " " + this.zComponent;
+        return "" + (int)this.xComponent + " " + (int)this.yComponent + " " + (int)this.zComponent;
     }
 
-    /**
-     * Clamp a value b/w min and max. This restricts the value b/w min and max.
-     * @param value value to be clamped
-     * @param min minimum value allowed
-     * @param max maximum value allowed
-     * @return returns either the input value if it lies b/w min and max, if its lower then min then returns min, max if its higher then max.
-     */
-    private static double clamp(final double value, final double min, final double max) {
-        return Math.min(max, Math.max(min, value));
-    }
 }
