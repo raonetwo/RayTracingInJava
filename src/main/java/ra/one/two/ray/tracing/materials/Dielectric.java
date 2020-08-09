@@ -21,25 +21,25 @@ public class Dielectric implements Material {
     @Override
     public ScatterResult scatter(final Ray rayIn, final HitRecord record) {
 
-        final double refrectiveIndexIncidenceOverRefrectiveIndexTransmission = record.isFrontFace() ? (1.0 / refractiveIndex) : refractiveIndex;
+        final double refractiveIndexIncidenceOverRefractiveIndexTransmission = record.isFrontFace() ? (1.0 / refractiveIndex) : refractiveIndex;
         final Vec3 unitIncidenceRayDirection = Vec3.unitVector(rayIn.getDirection());
         // get cos (angle of incidence)
         final double cosTheta = Math.min(Vec3.dot(unitIncidenceRayDirection.negative(), record.getNormal()), 1.0);
         final double sinTheta = Math.sqrt(1.0 - cosTheta*cosTheta);
         // Check for total internal reflection
-        if (refrectiveIndexIncidenceOverRefrectiveIndexTransmission * sinTheta > 1.0 ) {
+        if (refractiveIndexIncidenceOverRefractiveIndexTransmission * sinTheta > 1.0 ) {
             final Vec3 reflected = Vec3.reflect(unitIncidenceRayDirection, record.getNormal());
             return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), reflected));
         }
         // There is a probability associated with reflection vs refraction, we can estimate that with schlick approximation
-        final double reflectProbability = schlick(cosTheta, refrectiveIndexIncidenceOverRefrectiveIndexTransmission);
+        final double reflectProbability = schlick(cosTheta, refractiveIndexIncidenceOverRefractiveIndexTransmission);
         // Check on random if this ray can be reflected
         if (Math.random() < reflectProbability)
         {
             final Vec3 reflected = Vec3.reflect(unitIncidenceRayDirection, record.getNormal());
             return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), reflected));
         }
-        final Vec3 refracted = Vec3.refract(unitIncidenceRayDirection, record.getNormal(), refrectiveIndexIncidenceOverRefrectiveIndexTransmission);
+        final Vec3 refracted = Vec3.refract(unitIncidenceRayDirection, record.getNormal(), refractiveIndexIncidenceOverRefractiveIndexTransmission);
         return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), refracted));
     }
 

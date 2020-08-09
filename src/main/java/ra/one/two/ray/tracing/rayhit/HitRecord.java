@@ -17,19 +17,15 @@ public class HitRecord {
     private Vec3 normal = new Vec3();
     private boolean frontFace = false;
 
-    /**
-     * This object keeps record of when a ray hits a hittable object.
-     * @param rayHitLocationOnHittableObject location of ray when the object is hit
-     * @param rayExtensionScale the amount by which the ray gets extended in its direction at the time of hit.
-     * @param materialOfObjectHit the material of the object i.e. how it interacts with light rays
-     */
-    public HitRecord(final Vec3 rayHitLocationOnHittableObject, final double rayExtensionScale, final Material materialOfObjectHit) {
-        this.rayHitLocationOnHittableObject = rayHitLocationOnHittableObject;
-        this.rayExtensionScale = rayExtensionScale;
-        this.materialOfObjectHit = materialOfObjectHit;
+    public HitRecord() {
+        /*
+        * The value will be set at the time when some ray hits some object through setters.
+        * Immediately after that we check for scattering, so there is no use of creating new objects for each hit.
+        * The same object will be reused for all the future ray hits by scattered rays.
+        * This will save us some memory and cpu time, you can compare this with the first commit
+        * when we created new object for each hit.
+        */
     }
-
-    public HitRecord() { }
 
     public boolean isFrontFace() {
         return frontFace;
@@ -60,7 +56,7 @@ public class HitRecord {
      */
     public void setFaceNormal(final Ray ray, final Vec3 outwardNormal) {
         frontFace = Vec3.dot(ray.getDirection(), outwardNormal) < 0;
-        normal = frontFace ? outwardNormal : outwardNormal.negative();
+        normal = frontFace ? outwardNormal : outwardNormal.inverse();
     }
 
     public Vec3 getRayHitLocationOnHittableObject() {

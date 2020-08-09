@@ -1,9 +1,7 @@
 package ra.one.two.ray.tracing.primitives.math;
 
-import java.io.PrintStream;
-
 /**
- * This class implements the same 3 dimensional vector in Carterian space.
+ * This class implements the same 3 dimensional vector in Cartesian space.
  */
 public class Vec3 {
     private double xComponent;
@@ -11,7 +9,7 @@ public class Vec3 {
     private double zComponent;
 
     /**
-     * Standard 3 Dimentional constructor that takes x y and z values/
+     * Standard 3 Dimensional constructor that takes x y and z values/
      * @param xComponent x coordinate value of the vector
      * @param yComponent y coordinate value of the vector
      * @param zComponent z coordinate value of the vector
@@ -26,9 +24,7 @@ public class Vec3 {
      * Default initialised zero vector.
      */
     public Vec3() {
-        this.xComponent = 0;
-        this.yComponent = 0;
-        this.zComponent = 0;
+        this(0);
     }
 
     /**
@@ -36,9 +32,136 @@ public class Vec3 {
      * @param commonComponentValue the value to set for the 3 coordinates.
      */
     public Vec3(double commonComponentValue) {
-        this.xComponent = commonComponentValue;
-        this.yComponent = commonComponentValue;
-        this.zComponent = commonComponentValue;
+        this(commonComponentValue, commonComponentValue, commonComponentValue);
+    }
+
+    /**
+     * Getter for x coordinate
+     * @return x coordinate value of this vector
+     */
+    public double getXComponent() {
+        return xComponent;
+    }
+
+    /**
+     * Getter for y coordinate
+     * @return y coordinate value of this vector
+     */
+    public double getYComponent() {
+        return yComponent;
+    }
+
+    /**
+     * Getter for z coordinate
+     * @return z coordinate value of this vector
+     */
+    public double getZComponent() {
+        return zComponent;
+    }
+
+    /**
+     * Add the provided vector to this
+     * @param other vector to add to this
+     * @return this after the input vector is added to it.
+     */
+    public Vec3 add(final Vec3 other) {
+        this.xComponent = this.xComponent + other.xComponent;
+        this.yComponent = this.yComponent + other.yComponent;
+        this.zComponent = this.zComponent + other.zComponent;
+        return this;
+    }
+    
+    /**
+     * Subtract the provided vector from this
+     * @param other vector to subtract from this
+     * @return this after the input vector is added to it.
+     */
+    public Vec3 subtract(final Vec3 other) {
+        this.xComponent = this.xComponent - other.xComponent;
+        this.yComponent = this.yComponent - other.yComponent;
+        this.zComponent = this.zComponent - other.zComponent;
+        return this;
+    }
+
+    /**
+     * Scale this vector up, the current vector length gets changed but direction remains the same
+     * @param scale scaling factor we want to multiply with
+     * @return this vector scaled up
+     */
+    public Vec3 scaleUp(final double scale) {
+        this.xComponent = this.xComponent * scale;
+        this.yComponent = this.yComponent * scale;
+        this.zComponent = this.zComponent * scale;
+        return this;
+    }
+
+    /**
+     * Scale this vector down, the current vector length gets changed but direction remains the same
+     * @param scale scaling factor we want to divide with
+     * @return this vector scaled down
+     */
+    public Vec3 scaleDown(final double scale) {
+        this.xComponent = this.xComponent / scale;
+        this.yComponent = this.yComponent / scale;
+        this.zComponent = this.zComponent / scale;
+        return this;
+    }
+
+    /**
+     * Raise each component of vector by power
+     * @param power power by which each component has to be raised
+     * @return this after the power operation has been applied to all components.
+     */
+    public Vec3 pow(final double power) {
+        this.xComponent = Math.pow(this.xComponent, power);
+        this.yComponent = Math.pow(this.yComponent, power);
+        this.zComponent = Math.pow(this.zComponent, power);
+        return this;
+    }
+
+    /**
+     * Clamp the value of the vector components b/w min and max. This restricts the value b/w min and max.
+     * @param min minimum value allowed
+     * @param max maximum value allowed
+     * @return returns either the input value if it lies b/w min and max, if its lower then min then returns min, max if its higher then max.
+     */
+    public Vec3 clamp(final double min, final double max) {
+        this.xComponent = Math.min(max, Math.max(min, this.xComponent));
+        this.yComponent = Math.min(max, Math.max(min, this.yComponent));
+        this.zComponent = Math.min(max, Math.max(min, this.zComponent));
+        return this;
+    }
+
+    public Vec3 inverse() {
+        return this.scaleUp(-1);
+    }
+
+    /**
+     * Length of a vector squared aka dot product with self
+     * @return length of the vector squared.
+     */
+    public double lengthSquared() {
+        return this.xComponent *this.xComponent + this.yComponent *this.yComponent + this.zComponent *this.zComponent;
+    }
+
+    /**
+     * Length of the vector aka norm aka magnitude
+     * @return length of the vector.
+     */
+    public double length() {
+        return Math.sqrt(lengthSquared());
+    }
+
+    /**
+     * Get a vector that is negative of this vector. Same length opposite direction.
+     * @return a new vector that is negative of this vector.
+     */
+    public Vec3 negative() {
+        return new Vec3(-this.xComponent, -this.yComponent, -this.zComponent);
+    }
+
+    public String toString() {
+        return "" + (int)this.xComponent + " " + (int)this.yComponent + " " + (int)this.zComponent;
     }
 
     /**
@@ -124,127 +247,6 @@ public class Vec3 {
     }
 
     /**
-     * Getter for x coordinate
-     * @return x coordinate value of this vector
-     */
-    public double getxComponent() {
-        return xComponent;
-    }
-
-    /**
-     * Getter for y coordinate
-     * @return y coordinate value of this vector
-     */
-    public double getyComponent() {
-        return yComponent;
-    }
-
-    /**
-     * Getter for z coordinate
-     * @return z coordinate value of this vector
-     */
-    public double getzComponent() {
-        return zComponent;
-    }
-
-    /**
-     * Add the provided vector to this
-     * @param other vector to add to this
-     * @return this after the input vector is added to it.
-     */
-    public Vec3 add(final Vec3 other) {
-        this.xComponent = this.xComponent + other.xComponent;
-        this.yComponent = this.yComponent + other.yComponent;
-        this.zComponent = this.zComponent + other.zComponent;
-        return this;
-    }
-    
-    /**
-     * Subtract the provided vector from this
-     * @param other vector to subtract from this
-     * @return this after the input vector is added to it.
-     */
-    public Vec3 subtract(final Vec3 other) {
-        this.xComponent = this.xComponent - other.xComponent;
-        this.yComponent = this.yComponent - other.yComponent;
-        this.zComponent = this.zComponent - other.zComponent;
-        return this;
-    }
-
-    /**
-     * Get a vector that is negative of this vector. Same length opposite direction.
-     * @return a new vector that is negative of this vector.
-     */
-    public Vec3 negative() {
-        return new Vec3(-this.xComponent, -this.yComponent, -this.zComponent);
-    }
-
-    /**
-     * Scale this vector up, the current vector length gets changed but direction remains the same
-     * @param scale scaling factor we want to multiply with
-     * @return this vector scaled up
-     */
-    public Vec3 scaleUp(final double scale) {
-        this.xComponent = this.xComponent * scale;
-        this.yComponent = this.yComponent * scale;
-        this.zComponent = this.zComponent * scale;
-        return this;
-    }
-
-    /**
-     * Scale this vector down, the current vector length gets changed but direction remains the same
-     * @param scale scaling factor we want to divide with
-     * @return this vector scaled down
-     */
-    public Vec3 scaleDown(final double scale) {
-        this.xComponent = this.xComponent / scale;
-        this.yComponent = this.yComponent / scale;
-        this.zComponent = this.zComponent / scale;
-        return this;
-    }
-
-    /**
-     * Raise each component of vector by power
-     * @param power power by which each component has to be raised
-     * @return this after the power operation has been applied to all components.
-     */
-    public Vec3 pow(final double power) {
-        this.xComponent = Math.pow(this.xComponent, power);
-        this.yComponent = Math.pow(this.yComponent, power);
-        this.zComponent = Math.pow(this.zComponent, power);
-        return this;
-    }
-
-    /**
-     * Clamp the value of the vector components b/w min and max. This restricts the value b/w min and max.
-     * @param min minimum value allowed
-     * @param max maximum value allowed
-     * @return returns either the input value if it lies b/w min and max, if its lower then min then returns min, max if its higher then max.
-     */
-    public Vec3 clamp(final double min, final double max) {
-        this.xComponent = Math.min(max, Math.max(min, this.xComponent));
-        this.yComponent = Math.min(max, Math.max(min, this.yComponent));
-        this.zComponent = Math.min(max, Math.max(min, this.zComponent));
-        return this;
-    }
-
-    /**
-     * Length of a vector squared aka dot product with self
-     * @return lenth of the vector squared.
-     */
-    public double length_squared() {
-        return this.xComponent *this.xComponent + this.yComponent *this.yComponent + this.zComponent *this.zComponent;
-    }
-
-    /**
-     * Length of the vector aka norm aka magnitude
-     * @return length of the vector.
-     */
-    public double length() {
-        return Math.sqrt(length_squared());
-    }
-
-    /**
      * Create a random vector, note this vector is likely not of unit length.
      * @return a random vector.
      */
@@ -270,7 +272,7 @@ public class Vec3 {
     public static Vec3 randomInUnitSphere() {
         while (true) {
             Vec3 randomVector = random(-1, 1);
-            if (randomVector.length_squared() >= 1) {
+            if (randomVector.lengthSquared() >= 1) {
                 continue;
             }
             return randomVector;
@@ -295,19 +297,6 @@ public class Vec3 {
     }
 
     /**
-     * Get a unit vector that lies in the same hemisphere as the normal vctor
-     * @param normal any vector around which we want a hemisphere to get a unit vector.
-     * @return a unit vector in the hemisphere.
-     */
-    public static Vec3 randomInHemisphere(Vec3 normal) {
-        Vec3 unitSphere = randomInUnitSphere();
-        if (dot(unitSphere, normal) > 0.0) // In the same hemisphere as the normal
-            return unitSphere;
-        else
-            return unitSphere.negative();
-    }
-
-    /**
      * Get a vector which is reflection of input incident vector reflected about the input normal vector
      * see https://en.wikipedia.org/wiki/Reflection_(mathematics) and https://en.wikipedia.org/wiki/Specular_reflection
      * @param incidence vector we want to reflect
@@ -325,7 +314,7 @@ public class Vec3 {
     public static Vec3 randomInUnitDisk() {
         while (true) {
             Vec3 randomVectorInUnitSquareOnXYAxis = new Vec3(Math.random() * 2 -1, Math.random() * 2 -1, 0);
-            if (randomVectorInUnitSquareOnXYAxis.length_squared() >= 1) continue;
+            if (randomVectorInUnitSquareOnXYAxis.lengthSquared() >= 1) continue;
             return randomVectorInUnitSquareOnXYAxis;
         }
     }
@@ -335,24 +324,20 @@ public class Vec3 {
      * see https://graphics.stanford.edu/courses/cs148-10-summer/docs/2006--degreve--reflection_refraction.pdf for reference
      * @param incident incident unit vector
      * @param normal normal vector of the surface we want to refract around
-     * @param refrectiveIndexIncidenceOverRefrectiveIndexTransmission relative refractive index of the new medium
+     * @param refractiveIndexIncidenceOverRefractiveIndexTransmission relative refractive index of the new medium
      * @return refracted vector
      */
-    public static Vec3 refract(final Vec3 incident, final Vec3 normal, final double refrectiveIndexIncidenceOverRefrectiveIndexTransmission) {
+    public static Vec3 refract(final Vec3 incident, final Vec3 normal, final double refractiveIndexIncidenceOverRefractiveIndexTransmission) {
         // Get incidence angle
         double cosTheta = dot(incident.negative(), normal);
         // Get component perpendicular to normal for the refracted ray
         // Since the tangential component of incident and transmitted ray point in same direction. snell's law say that sinθt=η1/η2sinθi
         // which means the tangential component follow the above law as they are sin theta component of the incident and transmitted rays.
         // which means that t tangential = η1/η2[i+cosθin] where i and n are incident and normal vectors respectively.
-        Vec3 rOutPerp =  add(incident, multiply(normal, cosTheta)).scaleUp(refrectiveIndexIncidenceOverRefrectiveIndexTransmission);
+        Vec3 rOutPerp =  add(incident, multiply(normal, cosTheta)).scaleUp(refractiveIndexIncidenceOverRefractiveIndexTransmission);
         // t⊥=−√1−∣∣t‖∣∣^2  n i.e. the component parallel to normal can be retrieved using Pythagoras theorem we know that output ray length is 1.
-        Vec3 rOutParallel = multiply(normal, -Math.sqrt(Math.abs(1.0 - rOutPerp.length_squared())));
+        Vec3 rOutParallel = multiply(normal, -Math.sqrt(Math.abs(1.0 - rOutPerp.lengthSquared())));
         return rOutPerp.add(rOutParallel);
-    }
-
-    public String toString() {
-        return "" + (int)this.xComponent + " " + (int)this.yComponent + " " + (int)this.zComponent;
     }
 
 }

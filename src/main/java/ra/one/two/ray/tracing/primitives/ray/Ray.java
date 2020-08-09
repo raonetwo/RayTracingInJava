@@ -15,7 +15,7 @@ public class Ray {
     }
 
     /**
-     * COnstructor for ray
+     * Constructor for ray
      * @param origin vector position where a ray starts
      * @param direction vector direction in which the ray points
      */

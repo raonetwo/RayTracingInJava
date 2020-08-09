@@ -76,10 +76,10 @@ public class PixelRenderer implements Runnable {
         }
         // If our ray does not hit anything in the world we want a generic gradient of color blue that blends to white at the bottom. This serves as faux sky for our render.
         // get a unit vector in the direction of the ray
-        final Vec3 unit_direction = Vec3.unitVector(ray.getDirection());
+        final Vec3 unitDirection = Vec3.unitVector(ray.getDirection());
         // get the y coord for the unit vector and offset it by 1 since viewport max coordinate can be -1 and we want color to be positive
         // and finally scale by 0.5 since max value can be 1 and we know color value lies b/w 0 and 1
-        final double t = 0.5 * (unit_direction.getyComponent() + 1.0);
+        final double t = 0.5 * (unitDirection.getYComponent() + 1.0);
         // mix white with blue at bottom y is small hence t is small
         // standard linear interpolation or lerp
         // blendedValue=(1−t)⋅startValue+t⋅endValue

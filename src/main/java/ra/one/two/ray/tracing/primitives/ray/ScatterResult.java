@@ -11,7 +11,7 @@ public class ScatterResult {
     private final Ray scatteredRay;
 
     /**
-     * Constriuctor containing result of interaction of ray with materials to the object it hits.
+     * Constructor containing result of interaction of ray with materials to the object it hits.
      * @param colorFromObjectHit color that we get from scattering, this may be attenuated albedo, complete white etc. depending in material property
      * @param scatteredRay after the ray hits the object a new new ray is generated from the point of hit as origin and scattered depending on material property.
      */

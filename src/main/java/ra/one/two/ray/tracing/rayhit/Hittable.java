@@ -15,5 +15,5 @@ public interface Hittable {
      *                  like the material of object hit, the normal at hit location, the ray position from origin where it hit the object
      * @return boolean that indicates whether something was hit by the given ray
      */
-    public boolean hit(final Ray ray, final double tMin, final double tMax, final HitRecord hitRecord);
+    boolean hit(final Ray ray, final double tMin, final double tMax, final HitRecord hitRecord);
 }

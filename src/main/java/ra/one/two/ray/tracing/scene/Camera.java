@@ -21,7 +21,7 @@ public class Camera {
      * @param lookFrom the location the camera should be present at
      * @param lookAt the location we want camera to look at
      * @param upDirectionUnitVector a unit vector telling camera what up direction is
-     * @param vetricalFieldOfViewInDegrees field of View of Camera, basically till what angle can camera see from its viewport.
+     * @param verticalFieldOfViewInDegrees field of View of Camera, basically till what angle can camera see from its viewport.
      * @param aspect_ratio aspect ration of the camera viewport
      * @param aperture diameter of camera lens
      * @param focusDistance distance to focus camera at
@@ -30,11 +30,11 @@ public class Camera {
             final Vec3 lookFrom,
             final Vec3 lookAt,
             final Vec3 upDirectionUnitVector,
-            final double vetricalFieldOfViewInDegrees,
+            final double verticalFieldOfViewInDegrees,
             final double aspect_ratio,
             final double aperture,
             final double focusDistance) {
-        final double cameraFieldOfViewInRadians = Math.toRadians(vetricalFieldOfViewInDegrees);
+        final double cameraFieldOfViewInRadians = Math.toRadians(verticalFieldOfViewInDegrees);
         // When the camera is at origin viewport midpoint lies on z axis at z = - focusDistance plane.
         // Now that the camera moves, viewport moves with it still separated by distance focusDistance away.
         // Viewport height becomes two times (adjusting for the negative axis) distance allowed by field of view / 2
@@ -79,7 +79,7 @@ public class Camera {
         // Get a random vector that lies inside a unit disc and scale up to lensRadius
         final Vec3 randomDisk = Vec3.randomInUnitDisk().scaleUp(lensRadius);
         // Get a random vector in a disc of radius equal to lensRadius in the camera plane and add camera origin to get the ray origin
-        final Vec3 rayOrigin = Vec3.multiply(u, randomDisk.getxComponent()).add(Vec3.multiply(v, randomDisk.getyComponent())).add(cameraOrigin);
+        final Vec3 rayOrigin = Vec3.multiply(u, randomDisk.getXComponent()).add(Vec3.multiply(v, randomDisk.getYComponent())).add(cameraOrigin);
         return new Ray(rayOrigin,
                 Vec3.add(lowerLeftCorner, Vec3.multiply(horizontal, horizontalScaleOfViewportOffset)).add(Vec3.multiply(vertical, verticalScaleOfViewportOffset)).subtract(rayOrigin));
     }
