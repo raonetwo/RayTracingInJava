@@ -15,16 +15,21 @@ public class Camera {
     private final Vec3 u;
     private final Vec3 v;
     private final Vec3 w;
+    private double timeStart = 0;
+    private double timeEnd = 0;
 
     /**
      * Constructor for camera.
-     * @param lookFrom the location the camera should be present at
-     * @param lookAt the location we want camera to look at
-     * @param upDirectionUnitVector a unit vector telling camera what up direction is
+     *
+     * @param lookFrom                     the location the camera should be present at
+     * @param lookAt                       the location we want camera to look at
+     * @param upDirectionUnitVector        a unit vector telling camera what up direction is
      * @param verticalFieldOfViewInDegrees field of View of Camera, basically till what angle can camera see from its viewport.
-     * @param aspect_ratio aspect ration of the camera viewport
-     * @param aperture diameter of camera lens
-     * @param focusDistance distance to focus camera at
+     * @param aspect_ratio                 aspect ration of the camera viewport
+     * @param aperture                     diameter of camera lens
+     * @param focusDistance                distance to focus camera at
+     * @param timeStart                    start time of the image capture, shutter opens
+     * @param timeEnd                      end time of the image capture, shutter closes
      */
     public Camera(
             final Vec3 lookFrom,
@@ -33,14 +38,16 @@ public class Camera {
             final double verticalFieldOfViewInDegrees,
             final double aspect_ratio,
             final double aperture,
-            final double focusDistance) {
+            final double focusDistance,
+            final double timeStart,
+            final double timeEnd) {
         final double cameraFieldOfViewInRadians = Math.toRadians(verticalFieldOfViewInDegrees);
         // When the camera is at origin viewport midpoint lies on z axis at z = - focusDistance plane.
         // Now that the camera moves, viewport moves with it still separated by distance focusDistance away.
         // Viewport height becomes two times (adjusting for the negative axis) distance allowed by field of view / 2
         // tan(theta/2)= viewportHalfHeight/focusDistance where theta is field of view angle relative to camera origin
         // which makes viewportHeight as
-        final double viewportHeight = 2.0 * Math.tan(cameraFieldOfViewInRadians / 2) * focusDistance ;
+        final double viewportHeight = 2.0 * Math.tan(cameraFieldOfViewInRadians / 2) * focusDistance;
         final double viewportWidth = aspect_ratio * viewportHeight;
 
         // Get unit vector in direction to look at from the position to look from.
@@ -60,27 +67,32 @@ public class Camera {
 
         lowerLeftCorner = Vec3.subtract(cameraOrigin, Vec3.divide(horizontal, 2)).subtract(Vec3.divide(vertical, 2)).subtract(Vec3.multiply(w, focusDistance));
         lensRadius = aperture / 2;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
     }
 
     /**
      * Get a ray from camera from some random point on its lens towards the viewport.
      * The ray is in a direction of lower left corner of viewport
      * offset by multiplying input scales to viewport horizontal and vertical orthogonal vectors
+     *
      * @param horizontalScaleOfViewportOffset scale by which we want to scale viewport's horizontal direction vector by. It should lie b/w 0 and 1
-     *          as this scaled horizontal is added to lower left corner of view port to get the exact location where we want
-     *          ray to direct at from the camera.
-     * @param verticalScaleOfViewportOffset scale by which we want to scale viewport's vertical direction vector by. It should lie b/w 0 and 1
-     *          as this scaled horizontal is added to lower left corner of view port to get the exact location where we want
-     *          ray to direct at from the camera.
+     *                                        as this scaled horizontal is added to lower left corner of view port to get the exact location where we want
+     *                                        ray to direct at from the camera.
+     * @param verticalScaleOfViewportOffset   scale by which we want to scale viewport's vertical direction vector by. It should lie b/w 0 and 1
+     *                                        as this scaled horizontal is added to lower left corner of view port to get the exact location where we want
+     *                                        ray to direct at from the camera.
      * @return a ray from camera origin + random offset within lens radius (aperture/2) in the direction of lower left corner of view port that lies focus distance away
-     *         with a horizontal and vertical offset on the viewport place as requested in input.
+     * with a horizontal and vertical offset on the viewport place as requested in input.
      */
     Ray getRay(final double horizontalScaleOfViewportOffset, final double verticalScaleOfViewportOffset) {
         // Get a random vector that lies inside a unit disc and scale up to lensRadius
         final Vec3 randomDisk = Vec3.randomInUnitDisk().scaleUp(lensRadius);
         // Get a random vector in a disc of radius equal to lensRadius in the camera plane and add camera origin to get the ray origin
         final Vec3 rayOrigin = Vec3.multiply(u, randomDisk.getXComponent()).add(Vec3.multiply(v, randomDisk.getYComponent())).add(cameraOrigin);
+        // Return a ray that originates at a random point on the lens, that starts at the requests offset at a random time during the image capture.
         return new Ray(rayOrigin,
-                Vec3.add(lowerLeftCorner, Vec3.multiply(horizontal, horizontalScaleOfViewportOffset)).add(Vec3.multiply(vertical, verticalScaleOfViewportOffset)).subtract(rayOrigin));
+                Vec3.add(lowerLeftCorner, Vec3.multiply(horizontal, horizontalScaleOfViewportOffset)).add(Vec3.multiply(vertical, verticalScaleOfViewportOffset)).subtract(rayOrigin),
+                Math.random() * (timeEnd - timeStart) + timeStart);
     }
 }

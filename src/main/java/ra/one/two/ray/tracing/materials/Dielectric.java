@@ -1,22 +1,15 @@
 package ra.one.two.ray.tracing.materials;
 
-
+import lombok.AllArgsConstructor;
 import ra.one.two.ray.tracing.primitives.math.Vec3;
 import ra.one.two.ray.tracing.primitives.ray.Ray;
 import ra.one.two.ray.tracing.rayhit.HitRecord;
-import ra.one.two.ray.tracing.primitives.ray.ScatterResult;
+import ra.one.two.ray.tracing.rayhit.ScatterResult;
 
+@AllArgsConstructor
 public class Dielectric implements Material {
 
     private final double refractiveIndex;
-
-    /**
-     * Constructor for dielectric material
-     * @param refractiveIndex refractive index of the material
-     */
-    public Dielectric(final double refractiveIndex) {
-        this.refractiveIndex = refractiveIndex;
-    }
 
     @Override
     public ScatterResult scatter(final Ray rayIn, final HitRecord record) {
@@ -25,27 +18,26 @@ public class Dielectric implements Material {
         final Vec3 unitIncidenceRayDirection = Vec3.unitVector(rayIn.getDirection());
         // get cos (angle of incidence)
         final double cosTheta = Math.min(Vec3.dot(unitIncidenceRayDirection.negative(), record.getNormal()), 1.0);
-        final double sinTheta = Math.sqrt(1.0 - cosTheta*cosTheta);
+        final double sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta);
         // Check for total internal reflection
-        if (refractiveIndexIncidenceOverRefractiveIndexTransmission * sinTheta > 1.0 ) {
+        if (refractiveIndexIncidenceOverRefractiveIndexTransmission * sinTheta > 1.0) {
             final Vec3 reflected = Vec3.reflect(unitIncidenceRayDirection, record.getNormal());
-            return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), reflected));
+            return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), reflected, rayIn.getRayFireTime()));
         }
         // There is a probability associated with reflection vs refraction, we can estimate that with schlick approximation
         final double reflectProbability = schlick(cosTheta, refractiveIndexIncidenceOverRefractiveIndexTransmission);
         // Check on random if this ray can be reflected
-        if (Math.random() < reflectProbability)
-        {
+        if (Math.random() < reflectProbability) {
             final Vec3 reflected = Vec3.reflect(unitIncidenceRayDirection, record.getNormal());
-            return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), reflected));
+            return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), reflected, rayIn.getRayFireTime()));
         }
         final Vec3 refracted = Vec3.refract(unitIncidenceRayDirection, record.getNormal(), refractiveIndexIncidenceOverRefractiveIndexTransmission);
-        return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), refracted));
+        return new ScatterResult(new Vec3(1.0), new Ray(record.getRayHitLocationOnHittableObject(), refracted, rayIn.getRayFireTime()));
     }
 
     // Read https://en.wikipedia.org/wiki/Schlick%27s_approximation
     private double schlick(final double cosTheta, final double refractiveIndex) {
         final double r0 = Math.pow((1 - refractiveIndex) / (1 + refractiveIndex), 2);
-        return r0 + (1-r0)*Math.pow((1 - cosTheta),5);
+        return r0 + (1 - r0) * Math.pow((1 - cosTheta), 5);
     }
 }

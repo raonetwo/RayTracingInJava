@@ -1,5 +1,6 @@
 package ra.one.two.ray.tracing.rayhit;
 
+import ra.one.two.ray.tracing.primitives.objects.Hittable;
 import ra.one.two.ray.tracing.primitives.ray.Ray;
 
 import java.util.ArrayList;
@@ -28,8 +29,9 @@ public class HittableList implements Hittable {
     public boolean hit(final Ray ray, final double tMin, final double tMax, final HitRecord hitRecord) {
         double closestSoFar = tMax;
         boolean hasRayHitSomething = false;
-        for (final Hittable object : hittableList) {
-            boolean hit = object.hit(ray, tMin, closestSoFar, hitRecord);
+        for (int i = 0; i < hittableList.size(); i++) {
+            final Hittable object = hittableList.get(i);
+            final boolean hit = object.hit(ray, tMin, closestSoFar, hitRecord);
             if (hit) {
                 hasRayHitSomething = true;
                 closestSoFar = hitRecord.getRayExtensionScale();
@@ -37,5 +39,24 @@ public class HittableList implements Hittable {
         }
 
         return hasRayHitSomething;
+    }
+
+    @Override
+    public AxisAlignedBoundingBox boundingBox(double tStart, double tEnd) {
+        if (hittableList.isEmpty()) {
+            return null;
+        }
+
+        AxisAlignedBoundingBox outputBoundingBox = null;
+        for (int i = 0; i < hittableList.size(); i++) {
+            final Hittable hittableObject = hittableList.get(i);
+            final AxisAlignedBoundingBox currentObjectBoundingBox = hittableObject.boundingBox(tStart, tEnd);
+            if (currentObjectBoundingBox == null) {
+                return null;
+            }
+            outputBoundingBox = outputBoundingBox == null ? currentObjectBoundingBox : AxisAlignedBoundingBox.surroundingBox(outputBoundingBox, currentObjectBoundingBox);
+        }
+
+        return outputBoundingBox;
     }
 }

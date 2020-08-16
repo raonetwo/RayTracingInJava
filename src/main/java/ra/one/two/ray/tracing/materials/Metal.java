@@ -3,8 +3,8 @@ package ra.one.two.ray.tracing.materials;
 
 import ra.one.two.ray.tracing.primitives.math.Vec3;
 import ra.one.two.ray.tracing.primitives.ray.Ray;
-import ra.one.two.ray.tracing.primitives.ray.ScatterResult;
 import ra.one.two.ray.tracing.rayhit.HitRecord;
+import ra.one.two.ray.tracing.rayhit.ScatterResult;
 
 public class Metal implements Material {
 
@@ -13,8 +13,9 @@ public class Metal implements Material {
 
     /**
      * This is the metal material which can be attached to any object.
+     *
      * @param albedo the basic (diffuse?) color of the material.
-     * @param fuzz factor by which we may want to randomize the reflected scattered ray.
+     * @param fuzz   factor by which we may want to randomize the reflected scattered ray.
      */
     public Metal(final Vec3 albedo, final double fuzz) {
         this.albedo = albedo;
@@ -26,7 +27,7 @@ public class Metal implements Material {
         // Get a unit vector in the direction of reflection
         final Vec3 reflected = Vec3.reflect(Vec3.unitVector(rayIn.getDirection()), record.getNormal());
         // Get the reflected ray with direction slightly randomized based upon the fuzz factor
-        final Ray scattered = new Ray(record.getRayHitLocationOnHittableObject(), reflected.add(Vec3.randomInUnitSphere().scaleUp(fuzz)));
+        final Ray scattered = new Ray(record.getRayHitLocationOnHittableObject(), reflected.add(Vec3.randomInUnitSphere().scaleUp(fuzz)), rayIn.getRayFireTime());
         return new ScatterResult(albedo, Vec3.dot(scattered.getDirection(), record.getNormal()) > 0 ? scattered : null);
     }
 }
